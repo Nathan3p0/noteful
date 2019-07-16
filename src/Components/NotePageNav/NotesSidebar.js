@@ -14,7 +14,8 @@ const NotesSidebar = (props) => {
 }
 
 NotesSidebar.defaultProps = {
-    goBack : () => {}
+    goBack : () => {},
+    folder: ''
 }
 
 NotesSidebar.propTypes = {

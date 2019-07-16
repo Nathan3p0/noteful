@@ -20,5 +20,11 @@ NoteItem.propTypes = {
     name : PropTypes.string.isRequired,
     modified : PropTypes.string
 }
+
+NoteItem.defaultProps = {
+    id : '',
+    name : '',
+    modified: ''
+}
  
 export default NoteItem;

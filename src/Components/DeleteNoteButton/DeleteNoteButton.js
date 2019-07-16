@@ -11,5 +11,9 @@ const DeleteNoteButton = (props) => {
         </NotefulContext.Consumer>
      );
 }
+
+DeleteNoteButton.defaultProps = {
+    noteId : ''
+}
  
 export default DeleteNoteButton;

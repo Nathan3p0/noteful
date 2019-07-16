@@ -18,4 +18,13 @@ SingleNote.propTypes = {
   note : PropTypes.object.isRequired
 }
 
+SingleNote.defaultProps = {
+  note: {
+    id : '',
+    name : '',
+    modified : '',
+    content: ''
+  }
+}
+
 export default SingleNote;
