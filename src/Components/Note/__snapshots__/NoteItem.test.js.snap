@@ -1,0 +1,55 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Note Item Component renders empty given no note info 1`] = `
+<li
+  className="noteItem"
+>
+  <h2>
+    <a
+      href="/note/"
+      onClick={[Function]}
+    >
+      
+    </a>
+  </h2>
+  <span
+    className="noteDate"
+  >
+    Date Modified on 
+    Invalid Date
+  </span>
+  <button
+    className="btn btnDelete"
+    onClick={[Function]}
+  >
+    Delete Note
+  </button>
+</li>
+`;
+
+exports[`Note Item Component renders properly when given props 1`] = `
+<li
+  className="noteItem"
+>
+  <h2>
+    <a
+      href="/note/cbc787a0-ffaf-11e8-8eb2-f2801f1b9fd1"
+      onClick={[Function]}
+    >
+      Dogs
+    </a>
+  </h2>
+  <span
+    className="noteDate"
+  >
+    Date Modified on 
+    Jan 2, 2019
+  </span>
+  <button
+    className="btn btnDelete"
+    onClick={[Function]}
+  >
+    Delete Note
+  </button>
+</li>
+`;

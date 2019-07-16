@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Delete Note Button Component renders empty 1`] = `
+<button
+  className="btn btnDelete"
+  onClick={[Function]}
+>
+  Delete Note
+</button>
+`;
+
+exports[`Delete Note Button Component renders properly when given props 1`] = `
+<button
+  className="btn btnDelete"
+  onClick={[Function]}
+>
+  Delete Note
+</button>
+`;

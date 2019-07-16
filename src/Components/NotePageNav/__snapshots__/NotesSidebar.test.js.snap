@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Notes Sidebar Component renders empty given no note info 1`] = `
+Array [
+  <div
+    className="noteNavBtnWrapper"
+  >
+    <button
+      className="noteNavBtn"
+      onClick={[Function]}
+    >
+      Go Back
+    </button>
+  </div>,
+  <h3
+    className="activeNoteFolder"
+  >
+    
+  </h3>,
+]
+`;
+
+exports[`Notes Sidebar Component renders properly when given props 1`] = `
+Array [
+  <div
+    className="noteNavBtnWrapper"
+  >
+    <button
+      className="noteNavBtn"
+      onClick={[Function]}
+    >
+      Go Back
+    </button>
+  </div>,
+  <h3
+    className="activeNoteFolder"
+  >
+    Spangley
+  </h3>,
+]
+`;
