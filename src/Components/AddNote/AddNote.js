@@ -4,9 +4,9 @@ import './AddNote.css';
 
 const AddNote = (props) => {
 
-    return ( 
+    return (
         <NotefulContext.Consumer>
-            {({createNote, newNoteName, updateNote, newNoteContent, newNoteFolderId, folders }) => (
+            {({createNote, newNoteName, updateNote, newNoteContent, newNoteFolderId, folders, noFolderSelected }) => (
         <form onSubmit={e => createNote(e)} className='addNoteForm'>
             <label htmlFor='newNoteName'>New Note Name</label>
             <input type='text' id='newNoteName' value={newNoteName} name='newNoteName' onChange={event => updateNote(event)}  required/>
@@ -16,6 +16,7 @@ const AddNote = (props) => {
             <select id="newNoteFolderId" name="newNoteFolderId" value={newNoteFolderId} onChange={event => updateNote(event)} required>
                 {folders.map(folder => (<option key={folder.id} value={folder.id}>{folder.name}</option>))}
             </select>
+            {noFolderSelected && <p>Please Choose A Folder!</p>}
             <button>Create Note</button>
         </form>
             )}

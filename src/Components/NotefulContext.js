@@ -1,14 +1,15 @@
 import React from 'react'
 
 export const NotefulContext = React.createContext({
-    deleteNote: () => {},
-    updateFolder: () => {},
-    createFolder: () => {},
+    deleteNote: () => { },
+    updateFolder: () => { },
+    createFolder: () => { },
     newFolderName: '',
     newNoteName: '',
     newNoteContent: '',
     newNoteFolderId: '',
-    updateNote: () => {},
-    createNote: () => {},
+    updateNote: () => { },
+    createNote: () => { },
     folders: [],
+    noFolderSelected: false
 });
