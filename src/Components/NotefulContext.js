@@ -11,5 +11,6 @@ export const NotefulContext = React.createContext({
     updateNote: () => { },
     createNote: () => { },
     folders: [],
+    notes: [],
     noFolderSelected: false
 });

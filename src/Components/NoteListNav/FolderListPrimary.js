@@ -3,22 +3,27 @@ import FolderItem from '../NoteListNavItem/FolderItem';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import './FolderListPrimary.css'
+import { NotefulContext } from '../NotefulContext';
 
 const FolderListPrimary = (props) => {
-
-  const folder = props.folders.map((folder) => (
-    <FolderItem key={folder.id} id={folder.id} name={folder.name} />
-  ))
   return (
-    <React.Fragment>
-      <ul className="folderNavList">
-        {folder}
-      </ul>
-      <div className="navBtnWrapper">
-        <button><Link to="/addfolder">Add folder</Link></button>
-      </div>
-    </React.Fragment>
-  );
+    <NotefulContext.Consumer>
+      {({ folders }) => (
+        <React.Fragment>
+          <ul className="folderNavList">
+            {
+              folders.map(folder => (
+                <FolderItem key={folder.id} id={folder.id} name={folder.name} />))
+            }
+          </ul>
+          <div className="navBtnWrapper">
+            <button><Link to="/addfolder">Add folder</Link></button>
+          </div>
+        </React.Fragment>
+      )}
+
+    </NotefulContext.Consumer>
+  )
 }
 
 FolderListPrimary.defaultProps = {

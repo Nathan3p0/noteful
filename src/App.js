@@ -217,8 +217,8 @@ class App extends Component {
           <NotefulErrorPage>
             <nav className="notefulNav">
               <Switch>
-                <Route exact path="/" render={() => <FolderListPrimary folders={this.state.folders} />} />
-                <Route path="/folder/:folderid" render={() => <FolderListPrimary folders={this.state.folders} />} />
+                <Route exact path="/" component={FolderListPrimary} />
+                <Route path="/folder/:folderid" component={FolderListPrimary} />
                 <Route path="/note/:noteid" component={NotesSidebar} />
                 <Route path="/addfolder" component={FolderListPrimary} />
                 <Route path="/addnote" component={FolderListPrimary} />
