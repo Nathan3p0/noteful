@@ -7,10 +7,9 @@ import NotesList from './Components/NoteListMain/NotesList';
 import SingleNote from './Components/NotePageMain/SingleNote';
 import AddFolder from './Components/AddFolder/AddFolder';
 import AddNote from './Components/AddNote/AddNote';
-import { NotefulContext } from './Components/NotefulContext';
+import { NotefulContext} from './Components/NotefulContext';
 import NotefulErrorPage from './Components/ErrorPages/NotefulErrorPage';
 import Error404 from './Components/ErrorPages/Error404';
-import { withRouter } from 'react-router-dom'
 
 class App extends Component {
   constructor(props) {
@@ -27,65 +26,64 @@ class App extends Component {
       newNoteFolderId: '',
       updateNote: (event) => this.updateNote(event),
       createNote: (event) => this.createNote(event),
-      noFolderSelected: false
     }
   }
-
+  
   componentDidMount() {
     this.fetchFolders();
     this.fetchNotes();
   }
-
-  /*
+  
+  /* 
     * API Calls
   */
 
   fetchFolders = () => {
     fetch('http://localhost:9090/folders')
-      .then(response => {
-        if (response.ok) {
-          return response.json()
-        }
-        throw new Error('Network response was not ok.');
-      })
-      .then(responseJson => this.setState({
+    .then(response => {
+      if(response.ok) {
+        return response.json()
+      }
+      throw new Error('Network response was not ok.');
+    })
+    .then(responseJson => this.setState({
         folders: responseJson
-      }))
-      .catch(error => {
-        this.setState({
-          error: error.message
-        })
+    }) )
+    .catch(error => {
+      this.setState({
+        error: error.message
       })
+    })
   }
 
   fetchNotes = () => {
     fetch('http://localhost:9090/notes')
-      .then(response => {
-        if (response.ok) {
-          return response.json()
-        }
-        throw new Error('Network response was not ok.');
-      })
-      .then(responseJson => this.setState({
+    .then(response => {
+      if(response.ok) {
+        return response.json()
+      }
+      throw new Error('Network response was not ok.');
+    })
+    .then(responseJson => this.setState({
         notes: responseJson
       }))
-      .catch(error => {
-        this.setState({
-          error: error.message
-        })
+    .catch(error => {
+      this.setState({
+        error: error.message
       })
+    })
   }
 
   createFolder = (event) => {
     event.preventDefault()
-    fetch('http://localhost:9090/folders/', {
-      method: 'POST',
-      body: JSON.stringify({ name: this.state.newFolderName }),
-      headers: {
-        'Content-Type': 'application/json',
-      }
+    fetch('http://localhost:9090/folders/',{
+        method: 'POST',
+        body: JSON.stringify({name: this.state.newFolderName}),
+        headers: {
+            'Content-Type': 'application/json',
+        }
     }).then(response => {
-      if (response.ok) {
+      if(response.ok) {
         this.setState({
           error: ''
         })
@@ -93,23 +91,21 @@ class App extends Component {
       }
       throw new Error('Network response was not ok.');
     })
-      .then(() => {
-        this.fetchFolders()
-        this.props.history.push('/');
-        this.setState({ newFolderName: '' })
+    .then(response => {
+      this.fetchFolders()
+      this.setState({newFolderName: ''})
+    })
+    .catch(error => {
+      this.setState({
+        error: error.message
       })
-      .catch(error => {
-        this.setState({
-          error: error.message
-        })
-      })
+    })
   }
 
   createNote = (event) => {
     const date = new Date();
-    event.preventDefault();
-    if (this.state.newNoteFolderId.length > 0) {
-      fetch('http://localhost:9090/notes/', {
+    event.preventDefault()
+    fetch('http://localhost:9090/notes/',{
         method: 'POST',
         body: JSON.stringify({
           name: this.state.newNoteName,
@@ -118,33 +114,25 @@ class App extends Component {
           modified: date
         }),
         headers: {
-          'Content-Type': 'application/json',
-        }
-      }).then(response => {
-        if (response.ok) {
-          return response.json()
-        }
-        throw new Error('Network response was not ok.');
-      })
-        .then(() => {
-          this.fetchNotes()
-          this.props.history.push('/');
-          this.setState({
-            newNoteName: '',
-            newNoteContent: '',
-            newNoteFolderId: ''
-          })
-        })
-        .catch(error => {
-          this.setState({
-            error: error.message
-          })
-        })
-    } else {
+            'Content-Type': 'application/json',
+          }
+    }).then(response => {
+      if(response.ok) {
+        return response.json()
+      }
+      throw new Error('Network response was not ok.');
+    })
+    .then(response => {this.fetchNotes()
+    this.setState({
+      newNoteName: '',
+      newNoteContent: '',
+      newNoteFolderId: ''
+    })})
+    .catch(error => {
       this.setState({
-        noFolderSelected: true
+        error: error.message
       })
-    }
+    })
   }
 
   deleteNote = (noteID) => {
@@ -154,21 +142,18 @@ class App extends Component {
         'content-type': 'application/json'
       },
     })
-      .then(response => {
-        if (response.ok) {
-          return response.json()
-        }
-        throw new Error('Network response was not ok.');
+    .then(response => {
+      if(response.ok) {
+        return response.json()
+      }
+      throw new Error('Network response was not ok.');
+    })
+    .then(responseJson => this.fetchNotes())
+    .catch(error => {
+      this.setState({
+        error: error.message
       })
-      .then(() => {
-        this.fetchNotes();
-        this.props.history.push('/');
-      })
-      .catch(error => {
-        this.setState({
-          error: error.message
-        })
-      })
+    })
   }
 
   /*
@@ -177,7 +162,7 @@ class App extends Component {
 
   updateFolder = (folderName) => {
     this.setState({
-      newFolderName: folderName
+        newFolderName: folderName
     })
   }
 
@@ -186,7 +171,7 @@ class App extends Component {
     const name = event.target.name;
 
     this.setState({
-      [name]: value
+    [name]: value
     });
   }
 
@@ -195,8 +180,8 @@ class App extends Component {
   }
 
   findNoteFolder = (noteId) => {
-    const folderId = this.findNote(noteId).folderId;
-    return this.state.folders.find(folder => folder.id === folderId);
+      const folderId = this.findNote(noteId).folderId;
+      return this.state.folders.find(folder => folder.id === folderId);
   }
 
   findFolderNotes = (folderID) => {
@@ -209,33 +194,33 @@ class App extends Component {
     return (
       <div className="App">
         <header>
-          <h1>
-            <Link to="/">Noteful</Link>
-          </h1>
+            <h1>
+                <Link to="/">Noteful</Link>
+            </h1>
         </header>
         <NotefulErrorPage>
-          <NotefulContext.Provider value={this.state}>
-            <nav className="notefulNav">
-              <Switch>
-                <Route exact path="/" render={() => <FolderListPrimary folders={this.state.folders} />} />
-                <Route path="/folder/:folderid" render={() => <FolderListPrimary folders={this.state.folders} />} />
-                <Route path="/note/:noteid" render={(routerProps) => <NotesSidebar folder={this.findNoteFolder(routerProps.match.params.noteid).name} goBack={() => routerProps.history.goBack()} />} />
-                <Route path="/addfolder" render={() => <FolderListPrimary folders={this.state.folders} />} />
-                <Route path="/addnote" render={() => <FolderListPrimary folders={this.state.folders} />} />
-              </Switch>
-            </nav>
-            <main className="notefulContent">
-              {error}
-              <Switch>
-                <Route exact path="/" render={() => <NotesList notes={this.state.notes} />} />
-                <Route path="/folder/:folderid" render={(routerProps) => <NotesList notes={this.findFolderNotes(routerProps.match.params.folderid)} />} />
-                <Route path="/note/:noteid" render={(routerProps) => <SingleNote note={this.findNote(routerProps.match.params.noteid)} />} />
-                <Route path="/addfolder" render={() => <AddFolder />} />
-                <Route path="/addnote" render={() => <AddNote />} />
-                <Route component={Error404} />
-              </Switch>
-            </main>
-          </NotefulContext.Provider>
+            <NotefulContext.Provider value={this.state}>
+              <nav className="notefulNav">
+                <Switch>
+                  <Route exact path="/" render={() => <FolderListPrimary folders={this.state.folders} />} />
+                  <Route path="/folder/:folderid" render={() => <FolderListPrimary folders={this.state.folders} />} />
+                  <Route path="/note/:noteid" render={(routerProps) => <NotesSidebar folder={this.findNoteFolder(routerProps.match.params.noteid).name} goBack={() => routerProps.history.goBack()}   />} />
+                  <Route path="/addfolder" render={() => <FolderListPrimary folders={this.state.folders} />} />
+                  <Route path="/addnote" render={() => <FolderListPrimary folders={this.state.folders} />} />
+                </Switch>
+              </nav>
+              <main className="notefulContent">
+                {error}
+                <Switch>
+                    <Route exact path="/" render={() => <NotesList notes={this.state.notes} />} />
+                    <Route path="/folder/:folderid" render={(routerProps) => <NotesList notes={this.findFolderNotes(routerProps.match.params.folderid)}  />} />
+                    <Route path="/note/:noteid" render={(routerProps) => <SingleNote note={this.findNote(routerProps.match.params.noteid)}   />} />
+                    <Route path="/addfolder" render={() => <AddFolder /> } />
+                    <Route path="/addnote" render={() => <AddNote  /> } />
+                    <Route component={Error404} />
+                </Switch>
+              </main>
+            </NotefulContext.Provider>
         </NotefulErrorPage>
       </div>
     );
@@ -249,4 +234,4 @@ App.defaultProps = {
   }
 }
 
-export default withRouter(App);
+export default App;
