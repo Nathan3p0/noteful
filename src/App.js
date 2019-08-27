@@ -195,8 +195,7 @@ class App extends Component {
   }
 
   findNoteFolder = (noteId) => {
-    const folderId = this.findNote(noteId)
-    console.log(folderId);
+    const folderId = this.findNote(noteId).folderId;
     return this.state.folders.find(folder => folder.id === folderId);
   }
 
@@ -207,9 +206,6 @@ class App extends Component {
   render() {
     const error = this.state.error ? <div className='errorDisplay'>{this.state.error}</div> : '';
 
-
-
-
     return (
       <div className="App">
         <header>
@@ -217,19 +213,17 @@ class App extends Component {
             <Link to="/">Noteful</Link>
           </h1>
         </header>
-        <NotefulContext.Provider value={this.state}>
-          <NotefulErrorPage>
+        <NotefulErrorPage>
+          <NotefulContext.Provider value={this.state}>
             <nav className="notefulNav">
               <Switch>
                 <Route exact path="/" render={() => <FolderListPrimary folders={this.state.folders} />} />
                 <Route path="/folder/:folderid" render={() => <FolderListPrimary folders={this.state.folders} />} />
-                <Route path="/note/:noteid" render={(routerProps) => <NotesSidebar folder={this.findNoteFolder(routerProps.match.params.noteid)/*.name*/} goBack={() => routerProps.history.goBack()} />} />
+                <Route path="/note/:noteid" render={(routerProps) => <NotesSidebar folder={this.findNoteFolder(routerProps.match.params.noteid).name} goBack={() => routerProps.history.goBack()} />} />
                 <Route path="/addfolder" render={() => <FolderListPrimary folders={this.state.folders} />} />
                 <Route path="/addnote" render={() => <FolderListPrimary folders={this.state.folders} />} />
               </Switch>
             </nav>
-          </NotefulErrorPage>
-          <NotefulErrorPage>
             <main className="notefulContent">
               {error}
               <Switch>
@@ -241,9 +235,8 @@ class App extends Component {
                 <Route component={Error404} />
               </Switch>
             </main>
-          </NotefulErrorPage>
-        </NotefulContext.Provider>
-
+          </NotefulContext.Provider>
+        </NotefulErrorPage>
       </div>
     );
   }
