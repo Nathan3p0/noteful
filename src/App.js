@@ -195,7 +195,8 @@ class App extends Component {
   }
 
   findNoteFolder = (noteId) => {
-    const folderId = this.findNote(noteId);
+    const folderId = this.findNote(noteId)
+    console.log(folderId);
     return this.state.folders.find(folder => folder.id === folderId);
   }
 
@@ -205,6 +206,9 @@ class App extends Component {
 
   render() {
     const error = this.state.error ? <div className='errorDisplay'>{this.state.error}</div> : '';
+
+
+
 
     return (
       <div className="App">
@@ -219,9 +223,9 @@ class App extends Component {
               <Switch>
                 <Route exact path="/" render={() => <FolderListPrimary folders={this.state.folders} />} />
                 <Route path="/folder/:folderid" render={() => <FolderListPrimary folders={this.state.folders} />} />
-                <Route path="/note/:noteid" component={NotesSidebar} />
-                <Route path="/addfolder" component={FolderListPrimary} />
-                <Route path="/addnote" component={FolderListPrimary} />
+                <Route path="/note/:noteid" render={(routerProps) => <NotesSidebar folder={this.findNoteFolder(routerProps.match.params.noteid)/*.name*/} goBack={() => routerProps.history.goBack()} />} />
+                <Route path="/addfolder" render={() => <FolderListPrimary folders={this.state.folders} />} />
+                <Route path="/addnote" render={() => <FolderListPrimary folders={this.state.folders} />} />
               </Switch>
             </nav>
           </NotefulErrorPage>
