@@ -39,7 +39,7 @@ class App extends Component {
   */
 
   fetchFolders = () => {
-    fetch('http://localhost:9090/folders')
+    fetch('http://localhost:8000/api/folders')
     .then(response => {
       if(response.ok) {
         return response.json()
