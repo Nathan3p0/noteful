@@ -11,4 +11,5 @@ export const NotefulContext = React.createContext({
     updateNote: () => {},
     createNote: () => {},
     folders: [],
+    currentNote: {}
 });

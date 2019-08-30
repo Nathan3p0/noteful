@@ -17,6 +17,8 @@ class App extends Component {
     this.state = {
       folders: [],
       notes: [],
+      currentNote: {},
+      currentFolder: {},
       deleteNote: (noteID) => this.deleteNote(noteID),
       updateFolder: (folderName) => this.updateFolder(folderName),
       createFolder: (event) => this.createFolder(event),
@@ -74,6 +76,42 @@ class App extends Component {
     })
   }
 
+  fetchSingleNote = (noteId) => {
+    fetch(`http://localhost:8000/api/notes/${noteId}`)
+    .then(response => {
+      if(response.ok) {
+        return response.json()
+      }
+      throw new Error('Network response was not ok.');
+    })
+    .then(responseJson => {
+      return responseJson.name
+    })
+    .catch(error => {
+      this.setState({
+        error: error.message
+      })
+    })
+  }
+
+  fetchSingleFolder = (folderId) => {
+    fetch(`http://localhost:8000/api/folders/${folderId}`)
+    .then(response => {
+      if(response.ok) {
+        return response.json()
+      }
+      throw new Error('Network response was not ok.');
+    })
+    .then(responseJson => this.setState({
+        currentFolder: responseJson
+      }))
+    .catch(error => {
+      this.setState({
+        error: error.message
+      })
+    })
+  }
+
   createFolder = (event) => {
     event.preventDefault()
     fetch('http://localhost:9090/folders/',{
@@ -110,7 +148,7 @@ class App extends Component {
         body: JSON.stringify({
           name: this.state.newNoteName,
           content: this.state.newNoteContent,
-          folderId: this.state.newNoteFolderId,
+          folder_id: this.state.newNoteFolderId,
           created: date
         }),
         headers: {
@@ -175,12 +213,12 @@ class App extends Component {
     });
   }
 
-  findNote = (noteId) => {
-    return this.state.notes.find(note => note.id === noteId);
+  findNote = (id) => {
+    return this.fetchSingleNote(id)
   }
 
   findNoteFolder = (noteId) => {
-      const folderId = this.findNote(noteId).folderId;
+      const folderId = this.findNote(noteId).folder_id;
       return this.state.folders.find(folder => folder.id === folderId);
   }
 
@@ -204,7 +242,7 @@ class App extends Component {
                 <Switch>
                   <Route exact path="/" render={() => <FolderListPrimary folders={this.state.folders} />} />
                   <Route path="/folder/:folderid" render={() => <FolderListPrimary folders={this.state.folders} />} />
-                  <Route path="/note/:noteid" render={(routerProps) => <NotesSidebar folder={this.findNoteFolder(routerProps.match.params.noteid).name} goBack={() => routerProps.history.goBack()}   />} />
+                  {/* <Route path="/note/:noteid" render={(routerProps) => <NotesSidebar folder={this.findNoteFolder(routerProps.match.params.noteid).name} goBack={() => routerProps.history.goBack()}   />} /> */}
                   <Route path="/addfolder" render={() => <FolderListPrimary folders={this.state.folders} />} />
                   <Route path="/addnote" render={() => <FolderListPrimary folders={this.state.folders} />} />
                 </Switch>

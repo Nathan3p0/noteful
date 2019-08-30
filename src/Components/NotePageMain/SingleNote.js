@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import './SingleNote.css'
 
 const SingleNote = (props) => {
+  
     return ( 
         <section className="indNote">
           <ul>
@@ -20,7 +21,7 @@ SingleNote.propTypes = {
 
 SingleNote.defaultProps = {
   note: {
-    id : '',
+    id : 0,
     name : '',
     created : '',
     content: ''

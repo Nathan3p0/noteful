@@ -16,13 +16,13 @@ const NoteItem = (props) => {
 }
 
 NoteItem.propTypes = {
-    id : PropTypes.string.isRequired,
+    id : PropTypes.number.isRequired,
     name : PropTypes.string.isRequired,
     created : PropTypes.string
 }
 
 NoteItem.defaultProps = {
-    id : '',
+    id : 0,
     name : '',
     created: ''
 }

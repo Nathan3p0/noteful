@@ -13,7 +13,7 @@ const DeleteNoteButton = (props) => {
 }
 
 DeleteNoteButton.defaultProps = {
-    noteId : ''
+    noteId : 0
 }
  
 export default DeleteNoteButton;
