@@ -57,7 +57,7 @@ class App extends Component {
   }
 
   fetchNotes = () => {
-    fetch('http://localhost:9090/notes')
+    fetch('http://localhost:8000/api/notes')
     .then(response => {
       if(response.ok) {
         return response.json()
@@ -111,7 +111,7 @@ class App extends Component {
           name: this.state.newNoteName,
           content: this.state.newNoteContent,
           folderId: this.state.newNoteFolderId,
-          modified: date
+          created: date
         }),
         headers: {
             'Content-Type': 'application/json',

@@ -9,7 +9,7 @@ const NoteItem = (props) => {
     return ( 
             <li className="noteItem">
                 <h2><Link to={`/note/${props.id}`}>{props.name}</Link></h2>
-                <span className="noteDate">Date Modified on {new Date(props.modified).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric'  })}</span>
+                <span className="noteDate">Date Created on {new Date(props.created).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric'  })}</span>
                 <DeleteNoteButton noteId={props.id} />
             </li>
      );
@@ -18,13 +18,13 @@ const NoteItem = (props) => {
 NoteItem.propTypes = {
     id : PropTypes.string.isRequired,
     name : PropTypes.string.isRequired,
-    modified : PropTypes.string
+    created : PropTypes.string
 }
 
 NoteItem.defaultProps = {
     id : '',
     name : '',
-    modified: ''
+    created: ''
 }
  
 export default NoteItem;

@@ -7,7 +7,7 @@ import './NotesList.css';
 const NotesList = (props) => {
 
   const notes = props.notes.map((note) => (
-    <NoteItem key={note.id} id={note.id} name={note.name} modified={note.modified} />
+    <NoteItem key={note.id} id={note.id} name={note.name} created={note.created} />
   ))
 
     return ( 

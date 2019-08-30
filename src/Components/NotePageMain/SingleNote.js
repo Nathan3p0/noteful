@@ -7,7 +7,7 @@ const SingleNote = (props) => {
     return ( 
         <section className="indNote">
           <ul>
-            <NoteItem id={props.note.id} name={props.note.name} modified={props.note.modified}  />
+            <NoteItem id={props.note.id} name={props.note.name} created={props.note.created}  />
           </ul>
           <p className="noteContent">{props.note.content}</p>
         </section>
@@ -22,7 +22,7 @@ SingleNote.defaultProps = {
   note: {
     id : '',
     name : '',
-    modified : '',
+    created : '',
     content: ''
   }
 }
