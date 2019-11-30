@@ -1,20 +1,20 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import './FolderItem.css'
+import './FolderListItem.css'
 
-const FolderItem = (props) => {
-    
-    return ( 
+const FolderListItem = (props) => {
+
+    return (
         <li className="folderItem" id={props.id}>
             <NavLink to={`/folder/${props.id}`}>{props.name}</NavLink>
         </li>
-     );
+    );
 }
 
-FolderItem.propTypes = {
-    id : PropTypes.number.isRequired,
+FolderListItem.propTypes = {
+    id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired
 }
- 
-export default FolderItem;
+
+export default FolderListItem;

@@ -1,0 +1,14 @@
+{
+    "version": 2,
+    "alias": "nw4noteful",
+    "name": "noteful-app",
+    "routes": [
+        {
+            "handle": "filesystem"
+        },
+        {
+            "src": "/.*",
+            "dest": "/index.html"
+        }
+    ]
+}

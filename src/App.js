@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
 import './App.css';
 import { Route, Switch, Link } from 'react-router-dom';
-import FolderListPrimary from './Components/NoteListNav/FolderListPrimary';
-import NotesSidebar from './Components/NotePageNav/NotesSidebar';
-import NotesList from './Components/NoteListMain/NotesList';
-import SingleNote from './Components/NotePageMain/SingleNote';
-import AddFolder from './Components/AddFolder/AddFolder';
-import AddNote from './Components/AddNote/AddNote';
-import { NotefulContext} from './Components/NotefulContext';
+import FolderListPrimary from './Components/FolderList/FolderListPrimary';
+import NotesSidebar from './Components/NotesSidebar/NotesSidebar';
+import NotesList from './Components/NotesList/NotesList';
+import SingleNote from './Components/SingleNote/SingleNote';
+import AddFolderForm from './Components/AddFolderForm/AddFolderForm';
+import AddNoteForm from './Components/AddNoteForm/AddNoteForm';
+import { NotefulContext } from './Components/NotefulContext';
 import NotefulErrorPage from './Components/ErrorPages/NotefulErrorPage';
 import Error404 from './Components/ErrorPages/Error404';
+import NotesApiService from './services/notes-api-service';
+import FoldersApiService from './services/folders-api-service';
 
 class App extends Component {
   constructor(props) {
@@ -19,246 +21,221 @@ class App extends Component {
       notes: [],
       currentNote: {},
       currentFolder: {},
-      deleteNote: (noteID) => this.deleteNote(noteID),
-      updateFolder: (folderName) => this.updateFolder(folderName),
-      createFolder: (event) => this.createFolder(event),
-      newFolderName: '',
       newNoteName: '',
       newNoteContent: '',
-      newNoteFolderId: '',
-      updateNote: (event) => this.updateNote(event),
-      createNote: (event) => this.createNote(event),
+      folderName: '',
+      currentNoteId: null
     }
   }
-  
+
   componentDidMount() {
     this.fetchFolders();
     this.fetchNotes();
   }
-  
-  /* 
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.currentNoteId !== prevState.currentNoteId) {
+      this.getFolderName(this.state.currentNoteId);
+    }
+  }
+
+
+  /*
     * API Calls
   */
 
   fetchFolders = () => {
-    fetch('http://localhost:8000/api/folders')
-    .then(response => {
-      if(response.ok) {
-        return response.json()
-      }
-      throw new Error('Network response was not ok.');
-    })
-    .then(responseJson => this.setState({
-        folders: responseJson
-    }) )
-    .catch(error => {
-      this.setState({
-        error: error.message
+    NotesApiService.fetchFolders()
+      .then(res =>
+        this.setState({
+          folders: res
+        }))
+      .catch(res => {
+        this.setState({
+          error: res.error
+        })
       })
-    })
   }
 
   fetchNotes = () => {
-    fetch('http://localhost:8000/api/notes')
-    .then(response => {
-      if(response.ok) {
-        return response.json()
-      }
-      throw new Error('Network response was not ok.');
-    })
-    .then(responseJson => this.setState({
-        notes: responseJson
+    NotesApiService.fetchNotes()
+      .then(res => this.setState({
+        notes: res
       }))
-    .catch(error => {
-      this.setState({
-        error: error.message
+      .catch(error => {
+        this.setState({
+          error: error.message
+        })
       })
-    })
   }
 
   fetchSingleNote = (noteId) => {
-    fetch(`http://localhost:8000/api/notes/${noteId}`)
-    .then(response => {
-      if(response.ok) {
-        return response.json()
-      }
-      throw new Error('Network response was not ok.');
-    })
-    .then(responseJson => {
-      return responseJson.name
-    })
-    .catch(error => {
-      this.setState({
-        error: error.message
+    NotesApiService.fetchSingleNote(noteId)
+      .then(res => {
+        return res.name
       })
-    })
+      .catch(error => {
+        this.setState({
+          error: error.message
+        })
+      })
   }
 
   fetchSingleFolder = (folderId) => {
-    fetch(`http://localhost:8000/api/folders/${folderId}`)
-    .then(response => {
-      if(response.ok) {
-        return response.json()
-      }
-      throw new Error('Network response was not ok.');
-    })
-    .then(responseJson => this.setState({
+    FoldersApiService.fetchSingleFolder(folderId)
+      .then(responseJson => this.setState({
         currentFolder: responseJson
       }))
-    .catch(error => {
-      this.setState({
-        error: error.message
+      .catch(error => {
+        this.setState({
+          error: error.message
+        })
       })
-    })
   }
 
   createFolder = (event) => {
     event.preventDefault()
-    fetch('http://localhost:9090/folders/',{
-        method: 'POST',
-        body: JSON.stringify({name: this.state.newFolderName}),
-        headers: {
-            'Content-Type': 'application/json',
-        }
-    }).then(response => {
-      if(response.ok) {
+    const newFolder = {
+      name: this.state.newFolderName
+    }
+
+    FoldersApiService.createFolder(newFolder)
+      .then(res => {
         this.setState({
-          error: ''
+          newFolderName: '',
+          folders: [...this.state.folders, res]
         })
-        return response.json()
-      }
-      throw new Error('Network response was not ok.');
-    })
-    .then(response => {
-      this.fetchFolders()
-      this.setState({newFolderName: ''})
-    })
-    .catch(error => {
-      this.setState({
-        error: error.message
       })
-    })
+      .catch(error => {
+        this.setState({
+          error: error.message
+        })
+      })
   }
 
   createNote = (event) => {
-    const date = new Date();
-    event.preventDefault()
-    fetch('http://localhost:9090/notes/',{
-        method: 'POST',
-        body: JSON.stringify({
-          name: this.state.newNoteName,
-          content: this.state.newNoteContent,
-          folder_id: this.state.newNoteFolderId,
-          created: date
-        }),
-        headers: {
-            'Content-Type': 'application/json',
-          }
-    }).then(response => {
-      if(response.ok) {
-        return response.json()
-      }
-      throw new Error('Network response was not ok.');
-    })
-    .then(response => {this.fetchNotes()
-    this.setState({
-      newNoteName: '',
-      newNoteContent: '',
-      newNoteFolderId: ''
-    })})
-    .catch(error => {
-      this.setState({
-        error: error.message
+    const newNote = {
+      name: this.state.newNoteName,
+      content: this.state.newNoteContent,
+      folder_id: this.state.newNoteFolderId
+    }
+
+    NotesApiService.createNewNote(newNote)
+      .then(res => {
+        this.setState({
+          notes: [...this.state.notes, res],
+          newNoteName: '',
+          newNoteContent: '',
+          newNoteFolderId: ''
+        })
       })
-    })
+      .catch(error => {
+        this.setState({
+          error: error.message
+        })
+      })
   }
 
   deleteNote = (noteID) => {
-    fetch(`http://localhost:9090/notes/${noteID}`, {
-      method: 'DELETE',
-      headers: {
-        'content-type': 'application/json'
-      },
-    })
-    .then(response => {
-      if(response.ok) {
-        return response.json()
-      }
-      throw new Error('Network response was not ok.');
-    })
-    .then(responseJson => this.fetchNotes())
-    .catch(error => {
-      this.setState({
-        error: error.message
+    NotesApiService.deleteNote(noteID)
+      .then(res => {
+        this.setState({
+          notes: res
+        })
       })
-    })
+      .catch(error => {
+        this.setState({
+          error: error.message
+        })
+      })
   }
 
   /*
     * Other Methods
   */
 
-  updateFolder = (folderName) => {
+  updateFolder = (e) => {
     this.setState({
-        newFolderName: folderName
+      newFolderName: e.target.value
     })
   }
 
   updateNote = (event) => {
-    const value = event.target.value;
-    const name = event.target.name;
+    const { name, value } = event.target;
 
     this.setState({
-    [name]: value
+      [name]: value
     });
   }
 
-  findNote = (id) => {
-    return this.fetchSingleNote(id)
+  getFolderName = (id) => {
+    FoldersApiService.fetchNoteFolder(id)
+      .then(res => {
+        this.setState({
+          folderName: res
+        })
+      })
+      .catch(res => {
+        this.setState({
+          error: res.error
+        })
+      })
   }
 
-  findNoteFolder = (noteId) => {
-      const folderId = this.findNote(noteId).folder_id;
-      return this.state.folders.find(folder => folder.id === folderId);
-  }
-
-  findFolderNotes = (folderID) => {
-    return this.state.notes.filter(note => note.folderId === folderID);
+  getCurrentNote = (id) => {
+    this.setState({
+      currentNoteId: id
+    })
   }
 
   render() {
     const error = this.state.error ? <div className='errorDisplay'>{this.state.error}</div> : '';
+    const value = {
+      deleteNote: (noteID) => this.deleteNote(noteID),
+      updateFolder: this.updateFolder,
+      createFolder: (event) => this.createFolder(event),
+      newFolderName: this.state.newFolderName,
+      newNoteName: this.state.newNoteName,
+      newNoteContent: this.state.newNoteContent,
+      newNoteFolderId: this.state.newNoteFolderId,
+      updateNote: this.updateNote,
+      createNote: (event) => this.createNote(event),
+      folders: this.state.folders,
+      notes: this.state.notes,
+      folderName: this.state.folderName,
+      getCurrentNote: this.getCurrentNote
+    }
 
     return (
       <div className="App">
         <header>
-            <h1>
-                <Link to="/">Noteful</Link>
-            </h1>
+          <h1>
+            <Link to="/">Noteful</Link>
+          </h1>
         </header>
         <NotefulErrorPage>
-            <NotefulContext.Provider value={this.state}>
-              <nav className="notefulNav">
-                <Switch>
-                  <Route exact path="/" render={() => <FolderListPrimary folders={this.state.folders} />} />
-                  <Route path="/folder/:folderid" render={() => <FolderListPrimary folders={this.state.folders} />} />
-                  {/* <Route path="/note/:noteid" render={(routerProps) => <NotesSidebar folder={this.findNoteFolder(routerProps.match.params.noteid).name} goBack={() => routerProps.history.goBack()}   />} /> */}
-                  <Route path="/addfolder" render={() => <FolderListPrimary folders={this.state.folders} />} />
-                  <Route path="/addnote" render={() => <FolderListPrimary folders={this.state.folders} />} />
-                </Switch>
-              </nav>
-              <main className="notefulContent">
-                {error}
-                <Switch>
-                    <Route exact path="/" render={() => <NotesList notes={this.state.notes} />} />
-                    <Route path="/folder/:folderid" render={(routerProps) => <NotesList notes={this.findFolderNotes(routerProps.match.params.folderid)}  />} />
-                    <Route path="/note/:noteid" render={(routerProps) => <SingleNote note={this.findNote(routerProps.match.params.noteid)}   />} />
-                    <Route path="/addfolder" render={() => <AddFolder /> } />
-                    <Route path="/addnote" render={() => <AddNote  /> } />
-                    <Route component={Error404} />
-                </Switch>
-              </main>
-            </NotefulContext.Provider>
+          <NotefulContext.Provider value={value}>
+            <nav className="notefulNav">
+              <Switch>
+                <Route exact path="/" component={FolderListPrimary} />
+                <Route path="/folder/:folderid" component={FolderListPrimary} />
+                <Route path="/note/:noteid" component={NotesSidebar} />
+                <Route path="/addfolder" component={FolderListPrimary} />
+                <Route path="/addnote" component={FolderListPrimary} />
+              </Switch>
+            </nav>
+            <main className="notefulContent">
+              {error}
+              <Switch>
+                <Route exact path="/" component={NotesList} />
+                <Route path="/folder/:folderid" component={NotesList} />
+                <Route path="/note/:noteid" render={(routerProps) => <SingleNote note={routerProps.match.params.noteid} />} />
+                <Route path="/addfolder" component={AddFolderForm} />
+                <Route path="/addnote" component={AddNoteForm} />
+                <Route component={Error404} />
+              </Switch>
+            </main>
+          </NotefulContext.Provider>
         </NotefulErrorPage>
       </div>
     );

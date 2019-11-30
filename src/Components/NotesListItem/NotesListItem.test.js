@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import renderer from 'react-test-renderer'
 import { BrowserRouter } from 'react-router-dom';
-import NoteItem from './NoteItem'
+import NotesListItem from './NotesListItem'
 
 
 describe('Note Item Component', () => {
@@ -16,24 +16,24 @@ describe('Note Item Component', () => {
     it('renders without errors', () => {
         const div = document.createElement('div');
         ReactDOM.render(<BrowserRouter>
-            <NoteItem />
+            <NotesListItem />
         </BrowserRouter>, div);
         ReactDOM.unmountComponentAtNode(div);
     })
 
     it('renders empty given no note info', () => {
         const tree = renderer.create(
-        <BrowserRouter>
-            <NoteItem />
-        </BrowserRouter>).toJSON();
+            <BrowserRouter>
+                <NotesListItem />
+            </BrowserRouter>).toJSON();
         expect(tree).toMatchSnapshot()
     })
-    
+
     it('renders properly when given props', () => {
         const tree = renderer.create(
-        <BrowserRouter>
-            <NoteItem id={noteProps.id} name={noteProps.name} modified={noteProps.modified} />
-        </BrowserRouter>).toJSON();
+            <BrowserRouter>
+                <NotesListItem id={noteProps.id} name={noteProps.name} modified={noteProps.modified} />
+            </BrowserRouter>).toJSON();
         expect(tree).toMatchSnapshot()
     })
 

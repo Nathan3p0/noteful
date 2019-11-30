@@ -13,13 +13,13 @@ class NotefulErrorPage extends Component {
     }
 
     render() {
-        if(this.state.error) {
+        if (this.state.error) {
             return (
                 <main className='errorDisplay'>
                     <h1>Oooops!!! Something went wrong...</h1>
-                    <p>Damn gerbils have stopped running again! Someone has been dispatched to poke them with a sharp stick.</p>
+                    <p>Dang gerbils have stopped running again! Someone has been dispatched to poke them with a sharp stick.</p>
                 </main>
-            ); 
+            );
         }
         return this.props.children
     }
