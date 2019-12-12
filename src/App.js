@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import { Route, Switch, Link } from 'react-router-dom';
+import { Route, Switch, Link, Redirect } from 'react-router-dom';
 import FolderListPrimary from './Components/FolderList/FolderListPrimary';
 import NotesSidebar from './Components/NotesSidebar/NotesSidebar';
 import NotesList from './Components/NotesList/NotesList';
@@ -24,7 +24,9 @@ class App extends Component {
       newNoteName: '',
       newNoteContent: '',
       folderName: '',
-      currentNoteId: null
+      currentNoteId: null,
+      created: false,
+      deleted: false
     }
   }
 
@@ -48,7 +50,8 @@ class App extends Component {
     NotesApiService.fetchFolders()
       .then(res =>
         this.setState({
-          folders: res
+          folders: res,
+          redirect: false
         }))
       .catch(res => {
         this.setState({
@@ -60,7 +63,8 @@ class App extends Component {
   fetchNotes = () => {
     NotesApiService.fetchNotes()
       .then(res => this.setState({
-        notes: res
+        notes: res,
+        redirect: false
       }))
       .catch(error => {
         this.setState({
@@ -114,6 +118,7 @@ class App extends Component {
   }
 
   createNote = (event) => {
+    event.preventDefault();
     const newNote = {
       name: this.state.newNoteName,
       content: this.state.newNoteContent,
@@ -126,7 +131,9 @@ class App extends Component {
           notes: [...this.state.notes, res],
           newNoteName: '',
           newNoteContent: '',
-          newNoteFolderId: ''
+          newNoteFolderId: '',
+          created: true,
+          deleted: false
         })
       })
       .catch(error => {
@@ -136,11 +143,26 @@ class App extends Component {
       })
   }
 
+  renderNoteRedirect = () => {
+    if (this.state.created) {
+      const { notes } = this.state;
+      return <Redirect to={`/note/${notes[notes.length - 1].id}`} />
+    }
+  }
+
+  renderDeleteRedirect = () => {
+    if (this.state.deleted) {
+      return <Redirect to='/' />
+    }
+  }
+
   deleteNote = (noteID) => {
     NotesApiService.deleteNote(noteID)
       .then(res => {
         this.setState({
-          notes: res
+          notes: res,
+          deleted: true,
+          created: false
         })
       })
       .catch(error => {
@@ -208,6 +230,8 @@ class App extends Component {
 
     return (
       <div className="App">
+        {this.renderNoteRedirect()}
+        {this.renderDeleteRedirect()}
         <header>
           <h1>
             <Link to="/">Noteful</Link>
